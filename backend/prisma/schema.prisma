@@ -1,0 +1,307 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum Role {
+  STUDENT
+  INSTRUCTOR
+  ADMIN
+}
+
+enum CourseStatus {
+  DRAFT
+  PENDING_APPROVAL
+  PUBLISHED
+  REJECTED
+  ARCHIVED
+}
+
+enum LessonContentType {
+  VIDEO
+  ARTICLE
+  PDF
+  ASSESSMENT
+}
+
+enum OrderStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum QuestionType {
+  SINGLE_SELECT
+  MULTI_SELECT
+  TRUE_FALSE
+  FILL_BLANK
+}
+
+// ---------------------------------------------------------------------------
+// Users
+// ---------------------------------------------------------------------------
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  passwordHash  String
+  firstName     String
+  lastName      String
+  role          Role     @default(STUDENT)
+  avatarUrl     String?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Instructor relations
+  coursesTaught   Course[]        @relation("InstructorCourses")
+
+  // Student relations
+  cartItems       CartItem[]
+  orders          Order[]
+  enrollments     Enrollment[]
+  lessonProgress  LessonProgress[]
+  submissions     AssessmentSubmission[]
+  refreshTokens   RefreshToken[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@map("refresh_tokens")
+}
+
+// ---------------------------------------------------------------------------
+// Catalog
+// ---------------------------------------------------------------------------
+
+model Category {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  iconUrl     String?
+  courses     Course[]
+  createdAt   DateTime @default(now())
+
+  @@map("categories")
+}
+
+model Course {
+  id            String       @id @default(uuid())
+  title         String
+  slug          String       @unique
+  subtitle      String?
+  description   String
+  thumbnailUrl  String?
+  price         Decimal      @db.Decimal(10, 2)
+  discountPrice Decimal?     @db.Decimal(10, 2)
+  status        CourseStatus @default(DRAFT)
+  level         String?
+  language      String       @default("en")
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  instructorId String
+  instructor   User   @relation("InstructorCourses", fields: [instructorId], references: [id])
+
+  sections     CourseSection[]
+  enrollments  Enrollment[]
+  cartItems    CartItem[]
+  orderItems   OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+  @@index([instructorId])
+  @@index([status])
+  @@map("courses")
+}
+
+model CourseSection {
+  id       String @id @default(uuid())
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title    String
+  order    Int
+
+  lessons Lesson[]
+
+  @@index([courseId])
+  @@map("course_sections")
+}
+
+model Lesson {
+  id          String            @id @default(uuid())
+  sectionId   String
+  section     CourseSection     @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  title       String
+  order       Int
+  contentType LessonContentType
+  contentUrl  String?
+  durationSec Int?
+  isPreview   Boolean           @default(false)
+
+  progress    LessonProgress[]
+  assessment  Assessment?
+
+  @@index([sectionId])
+  @@map("lessons")
+}
+
+// ---------------------------------------------------------------------------
+// Cart / Orders / Payments (PayU)
+// ---------------------------------------------------------------------------
+
+model CartItem {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  addedAt   DateTime @default(now())
+
+  @@unique([userId, courseId])
+  @@map("cart_items")
+}
+
+model Order {
+  id             String      @id @default(uuid())
+  userId         String
+  user           User        @relation(fields: [userId], references: [id])
+  txnId          String      @unique // sent to PayU as txnid
+  amount         Decimal     @db.Decimal(10, 2)
+  status         OrderStatus @default(PENDING)
+  payuMihpayid   String?
+  payuStatus     String?
+  payuHash       String?
+  payuRawPayload Json?
+  items          OrderItem[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([userId])
+  @@map("orders")
+}
+
+model OrderItem {
+  id       String  @id @default(uuid())
+  orderId  String
+  order    Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  courseId String
+  course   Course  @relation(fields: [courseId], references: [id])
+  price    Decimal @db.Decimal(10, 2)
+
+  @@map("order_items")
+}
+
+model Enrollment {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id])
+  enrolledAt  DateTime @default(now())
+  completedAt DateTime?
+
+  @@unique([userId, courseId])
+  @@index([courseId])
+  @@map("enrollments")
+}
+
+model LessonProgress {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonId    String
+  lesson      Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  lastPositionSec Int?
+
+  @@unique([userId, lessonId])
+  @@map("lesson_progress")
+}
+
+// ---------------------------------------------------------------------------
+// Assessments
+// ---------------------------------------------------------------------------
+
+model Assessment {
+  id            String     @id @default(uuid())
+  lessonId      String     @unique
+  lesson        Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  title         String
+  passPercent   Int        @default(70)
+  questions     Question[]
+  submissions   AssessmentSubmission[]
+
+  @@map("assessments")
+}
+
+model Question {
+  id           String       @id @default(uuid())
+  assessmentId String
+  assessment   Assessment   @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  type         QuestionType
+  prompt       String
+  order        Int
+  points       Int          @default(1)
+
+  // For SINGLE_SELECT / MULTI_SELECT / TRUE_FALSE
+  options      QuestionOption[]
+
+  // For FILL_BLANK — accepted answers, case-insensitive match (JSON string array)
+  acceptedAnswers Json?
+
+  @@index([assessmentId])
+  @@map("questions")
+}
+
+model QuestionOption {
+  id         String   @id @default(uuid())
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  text       String
+  isCorrect  Boolean  @default(false)
+  order      Int
+
+  @@index([questionId])
+  @@map("question_options")
+}
+
+model AssessmentSubmission {
+  id           String     @id @default(uuid())
+  assessmentId String
+  assessment   Assessment @relation(fields: [assessmentId], references: [id])
+  userId       String
+  user         User       @relation(fields: [userId], references: [id])
+  answers      Json       // { [questionId]: string | string[] }
+  score        Int
+  maxScore     Int
+  passed       Boolean
+  submittedAt  DateTime   @default(now())
+
+  @@index([assessmentId])
+  @@index([userId])
+  @@map("assessment_submissions")
+}
