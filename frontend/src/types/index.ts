@@ -19,6 +19,27 @@ export interface Category {
 }
 
 export type CourseStatus = "DRAFT" | "PENDING_APPROVAL" | "PUBLISHED" | "REJECTED" | "ARCHIVED";
+export type CourseType = "ONLINE" | "OFFLINE" | "BOOTCAMP";
+
+export interface CourseSeo {
+  id?: string;
+  courseId?: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaKeywords?: string | null;
+  canonicalUrl?: string | null;
+  ogTitle?: string | null;
+  ogDescription?: string | null;
+  ogImageUrl?: string | null;
+  ogType?: string | null;
+  twitterCard?: string | null;
+  twitterTitle?: string | null;
+  twitterDescription?: string | null;
+  twitterImageUrl?: string | null;
+  structuredData?: any;
+  createdAt?: string;
+  updatedAt?: string;
+}
 
 export interface Course {
   id: string;
@@ -27,15 +48,24 @@ export interface Course {
   subtitle?: string | null;
   description: string;
   thumbnailUrl?: string | null;
+  outcomeImageUrl?: string | null;
+  accessoryImageUrl?: string | null;
   price: string;
   discountPrice?: string | null;
   status: CourseStatus;
+  type: CourseType;
   level?: string | null;
   language: string;
+  heroHtml?: string | null;
+  outcomesHtml?: string | null;
+  accessoriesHtml?: string | null;
+  faqs?: { question: string; answer: string }[] | null;
   category: { name: string; slug: string };
   instructor: { firstName: string; lastName: string; id?: string; avatarUrl?: string | null };
   sections?: CourseSection[];
+  seo?: CourseSeo | null;
   isEnrolled?: boolean;
+  isDeleted?: boolean;
   _count?: { enrollments: number };
 }
 

@@ -71,6 +71,37 @@ export const createAssessmentSchema = z
     });
   });
 
+export const updateAssessmentSchema = z
+  .object({
+    title: z.string().min(1),
+    passPercent: z.number().int().min(0).max(100).default(70),
+    questions: z.array(questionSchema).min(1),
+  })
+  .superRefine((data, ctx) => {
+    data.questions.forEach((q, index) => {
+      if (q.type === "SINGLE_SELECT") {
+        const correctCount = q.options.filter((o) => o.isCorrect).length;
+        if (correctCount !== 1) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "SINGLE_SELECT questions must have exactly one correct option",
+            path: ["questions", index, "options"],
+          });
+        }
+      }
+      if (q.type === "MULTI_SELECT") {
+        const hasCorrect = q.options.some((o) => o.isCorrect);
+        if (!hasCorrect) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "MULTI_SELECT questions must have at least one correct option",
+            path: ["questions", index, "options"],
+          });
+        }
+      }
+    });
+  });
+
 // answers: { [questionId]: string (single_select/true_false/fill_blank) | string[] (multi_select) }
 export const submitAssessmentSchema = z.object({
   answers: z.record(z.union([z.string(), z.array(z.string())])),

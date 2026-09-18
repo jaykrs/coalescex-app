@@ -9,7 +9,9 @@ type ListQuery = z.infer<typeof listCoursesQuerySchema>;
 export async function listPublishedCourses(query: ListQuery) {
   const where = {
     status: CourseStatus.PUBLISHED,
+    isDeleted: false,
     ...(query.category ? { category: { slug: query.category } } : {}),
+    ...(query.type ? { type: query.type } : {}),
     ...(query.search
       ? {
           OR: [
@@ -40,7 +42,10 @@ export async function listPublishedCourses(query: ListQuery) {
 
 export async function getCourseDetail(idOrSlug: string, viewerId?: string) {
   const course = await prisma.course.findFirst({
-    where: { OR: [{ id: idOrSlug }, { slug: idOrSlug }] },
+    where: {
+      OR: [{ id: idOrSlug }, { slug: idOrSlug }],
+      isDeleted: false,
+    },
     include: {
       category: true,
       instructor: { select: { id: true, firstName: true, lastName: true, avatarUrl: true } },
@@ -48,6 +53,7 @@ export async function getCourseDetail(idOrSlug: string, viewerId?: string) {
         orderBy: { order: "asc" },
         include: { lessons: { orderBy: { order: "asc" }, include: { assessment: { select: { id: true } } } } },
       },
+      seo: true,
       _count: { select: { enrollments: true } },
     },
   });
@@ -83,7 +89,7 @@ export async function getCourseDetail(idOrSlug: string, viewerId?: string) {
 }
 
 export async function assertOwnsCourse(courseId: string, instructorId: string) {
-  const course = await prisma.course.findUnique({ where: { id: courseId } });
+  const course = await prisma.course.findFirst({ where: { id: courseId, isDeleted: false } });
   if (!course) throw ApiError.notFound("Course not found");
   if (course.instructorId !== instructorId) throw ApiError.forbidden("You do not own this course");
   return course;

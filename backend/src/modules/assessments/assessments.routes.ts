@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { requireAuth, requireRole } from "@/middleware/auth";
 import { Role } from "@prisma/client";
-import { createAssessmentSchema, submitAssessmentSchema } from "./assessments.schema";
+import { createAssessmentSchema, updateAssessmentSchema, submitAssessmentSchema } from "./assessments.schema";
 import * as assessmentsService from "./assessments.service";
 import { prisma } from "@/config/prisma";
 import { ApiError } from "@/utils/ApiError";
@@ -19,8 +19,45 @@ router.post("/", requireAuth, requireRole(Role.INSTRUCTOR, Role.ADMIN), async (r
   res.status(201).json({ assessment });
 });
 
-// Student: resolve a lesson's assessment id (course view only has lesson IDs)
-router.get("/by-lesson/:lessonId", requireAuth, requireRole(Role.STUDENT), async (req, res) => {
+// Instructor/admin: get full assessment details with answers for editing
+router.get(
+  "/by-lesson/:lessonId/manage",
+  requireAuth,
+  requireRole(Role.INSTRUCTOR, Role.ADMIN),
+  async (req, res) => {
+    const assessment = await assessmentsService.getAssessmentForInstructor(
+      req.params.lessonId,
+      req.user!.sub,
+      req.user!.role === Role.ADMIN
+    );
+    res.json({ assessment });
+  }
+);
+
+// Instructor/admin: update assessment questions, title, passPercent
+router.put("/:id", requireAuth, requireRole(Role.INSTRUCTOR, Role.ADMIN), async (req, res) => {
+  const input = updateAssessmentSchema.parse(req.body);
+  const assessment = await assessmentsService.updateAssessment(
+    req.params.id,
+    input,
+    req.user!.sub,
+    req.user!.role === Role.ADMIN
+  );
+  res.json({ assessment });
+});
+
+// Instructor/admin: delete an assessment
+router.delete("/:id", requireAuth, requireRole(Role.INSTRUCTOR, Role.ADMIN), async (req, res) => {
+  const result = await assessmentsService.deleteAssessment(
+    req.params.id,
+    req.user!.sub,
+    req.user!.role === Role.ADMIN
+  );
+  res.json(result);
+});
+
+// Resolve a lesson's assessment id
+router.get("/by-lesson/:lessonId", requireAuth, async (req, res) => {
   const assessment = await prisma.assessment.findUnique({
     where: { lessonId: req.params.lessonId },
     select: { id: true },

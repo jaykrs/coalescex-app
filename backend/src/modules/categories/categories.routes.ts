@@ -18,7 +18,15 @@ const categorySchema = z.object({
 router.get("/", async (_req, res) => {
   const categories = await prisma.category.findMany({
     orderBy: { name: "asc" },
-    include: { _count: { select: { courses: true } } },
+    include: {
+      _count: {
+        select: {
+          courses: {
+            where: { isDeleted: false, status: "PUBLISHED" },
+          },
+        },
+      },
+    },
   });
   res.json({ categories });
 });

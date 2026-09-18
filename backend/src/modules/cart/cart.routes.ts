@@ -10,7 +10,7 @@ router.use(requireAuth, requireRole(Role.STUDENT));
 
 router.get("/", async (req, res) => {
   const items = await prisma.cartItem.findMany({
-    where: { userId: req.user!.sub },
+    where: { userId: req.user!.sub, course: { isDeleted: false } },
     include: { course: { include: { category: true } } },
     orderBy: { addedAt: "desc" },
   });
@@ -27,7 +27,7 @@ router.post("/", async (req, res) => {
   const { courseId } = addItemSchema.parse(req.body);
 
   const course = await prisma.course.findUnique({ where: { id: courseId } });
-  if (!course || course.status !== "PUBLISHED") throw ApiError.notFound("Course not available");
+  if (!course || course.status !== "PUBLISHED" || course.isDeleted) throw ApiError.notFound("Course not available");
 
   const alreadyEnrolled = await prisma.enrollment.findUnique({
     where: { userId_courseId: { userId: req.user!.sub, courseId } },

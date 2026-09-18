@@ -1,0 +1,138 @@
+{
+  "topSections": [
+    {
+      "title": "Skills",
+      "links": [
+        { "label": "Accounting", "href": "/courses?search=Accounting" },
+        { "label": "Artificial Intelligence (AI)", "href": "/courses?search=Artificial+Intelligence" },
+        { "label": "Cybersecurity", "href": "/courses?search=Cybersecurity" },
+        { "label": "Data Analytics", "href": "/courses?search=Data+Analytics" },
+        { "label": "Digital Marketing", "href": "/courses?search=Digital+Marketing" },
+        { "label": "Human Resources (HR)", "href": "/courses?search=Human+Resources" },
+        { "label": "Microsoft Excel", "href": "/courses?search=Microsoft+Excel" },
+        { "label": "Project Management", "href": "/courses?search=Project+Management" },
+        { "label": "Python", "href": "/courses?search=Python" },
+        { "label": "SQL", "href": "/courses?search=SQL" }
+      ]
+    },
+    {
+      "title": "Professional Certificates",
+      "links": [
+        { "label": "Google AI Certificate", "href": "/courses?search=Google+AI" },
+        { "label": "Google Cybersecurity Certificate", "href": "/courses?search=Google+Cybersecurity" },
+        { "label": "Google Data Analytics Certificate", "href": "/courses?search=Google+Data+Analytics" },
+        { "label": "Google IT Support Certificate", "href": "/courses?search=Google+IT+Support" },
+        { "label": "Google Project Management Certificate", "href": "/courses?search=Google+Project+Management" },
+        { "label": "Google UX Design Certificate", "href": "/courses?search=Google+UX+Design" },
+        { "label": "IBM AI Engineering Certificate", "href": "/courses?search=IBM+AI+Engineering" },
+        { "label": "IBM AI Product Manager Certificate", "href": "/courses?search=IBM+AI+Product+Manager" },
+        { "label": "IBM Data Science Certificate", "href": "/courses?search=IBM+Data+Science" },
+        { "label": "Intuit Academy Bookkeeping Certificate", "href": "/courses?search=Intuit+Bookkeeping" }
+      ]
+    },
+    {
+      "title": "Courses & Specializations",
+      "links": [
+        { "label": "AI Essentials Specialization", "href": "/courses?search=AI+Essentials" },
+        { "label": "AI for Business Specialization", "href": "/courses?search=AI+for+Business" },
+        { "label": "AI for Everyone Course", "href": "/courses?search=AI+for+Everyone" },
+        { "label": "AI in Healthcare Specialization", "href": "/courses?search=AI+in+Healthcare" },
+        { "label": "Deep Learning Specialization", "href": "/courses?search=Deep+Learning" },
+        { "label": "Excel Skills for Business Specialization", "href": "/courses?search=Excel+Skills+for+Business" },
+        { "label": "Financial Markets Course", "href": "/courses?search=Financial+Markets" },
+        { "label": "Machine Learning Specialization", "href": "/courses?search=Machine+Learning" },
+        { "label": "Prompt Engineering for ChatGPT Course", "href": "/courses?search=Prompt+Engineering" },
+        { "label": "Python for Everybody Specialization", "href": "/courses?search=Python+for+Everybody" }
+      ]
+    },
+    {
+      "title": "Career Resources",
+      "links": [
+        { "label": "Career Aptitude Test", "href": "/career/aptitude-test" },
+        { "label": "CAPM Certification Requirements", "href": "/career/capm-requirements" },
+        { "label": "CompTIA A+ Certification Requirements", "href": "/career/comptia-a-plus" },
+        { "label": "CompTIA Security+ Certification Requirements", "href": "/career/comptia-security-plus" },
+        { "label": "Essential IT Certifications", "href": "/career/essential-it-certifications" },
+        { "label": "High-Income Skills to Learn", "href": "/career/high-income-skills" },
+        { "label": "How to Learn Artificial Intelligence", "href": "/career/how-to-learn-ai" },
+        { "label": "PMP Certification Requirements", "href": "/career/pmp-requirements" },
+        { "label": "Popular Cybersecurity Certifications", "href": "/career/popular-cybersecurity-certifications" },
+        { "label": "Share your Coursera learning story", "href": "/stories" }
+      ]
+    }
+  ],
+  "bottomSections": [
+    {
+      "title": "Coursera",
+      "links": [
+        { "label": "About", "href": "/about" },
+        { "label": "What We Offer", "href": "/offer" },
+        { "label": "Leadership", "href": "/leadership" },
+        { "label": "Careers", "href": "/careers" },
+        { "label": "Catalog", "href": "/courses" },
+        { "label": "Coursera Plus", "href": "/plus" },
+        { "label": "Professional Certificates", "href": "/certificates" },
+        { "label": "MasterTrack® Certificates", "href": "/mastertrack" },
+        { "label": "Degrees", "href": "/degrees" },
+        { "label": "For Enterprise", "href": "/enterprise" },
+        { "label": "For Government", "href": "/government" },
+        { "label": "For Campus", "href": "/campus" },
+        { "label": "Become a Partner", "href": "/partners" },
+        { "label": "Social Impact", "href": "/social-impact" }
+      ]
+    },
+    {
+      "title": "Community",
+      "links": [
+        { "label": "Learners", "href": "/community/learners" },
+        { "label": "Partners", "href": "/community/partners" },
+        { "label": "Beta Testers", "href": "/community/beta-testers" },
+        { "label": "Blog", "href": "/blog" },
+        { "label": "The Coursera Podcast", "href": "/podcast" },
+        { "label": "Tech Blog", "href": "/tech-blog" }
+      ]
+    },
+    {
+      "title": "More",
+      "links": [
+        { "label": "Press", "href": "/press" },
+        { "label": "Investors", "href": "/investors" },
+        { "label": "Terms", "href": "/terms" },
+        { "label": "Privacy", "href": "/privacy" },
+        { "label": "Help", "href": "/help" },
+        { "label": "Accessibility", "href": "/accessibility" },
+        { "label": "Contact", "href": "/contact" },
+        { "label": "Articles", "href": "/articles" },
+        { "label": "Directory", "href": "/directory" },
+        { "label": "Affiliates", "href": "/affiliates" },
+        { "label": "Modern Slavery Statement", "href": "/modern-slavery" },
+        { "label": "Sitemap", "href": "/sitemap" },
+        { "label": "Cookies Preference Center", "href": "#cookies" }
+      ]
+    }
+  ],
+  "appDownloads": {
+    "title": "Mobile App",
+    "appStore": {
+      "title": "Download on the",
+      "storeName": "App Store",
+      "url": "https://itunes.apple.com/app/coursera"
+    },
+    "googlePlay": {
+      "title": "GET IT ON",
+      "storeName": "Google Play",
+      "url": "https://play.google.com/store/apps/details?id=org.coursera.android"
+    }
+  },
+  "bottomBar": {
+    "brandName": "Coursera",
+    "copyright": "© 2026 Coalescex. All rights reserved. ",
+    "socialLinks": [
+      { "name": "Facebook", "url": "https://www.facebook.com" },
+      { "name": "LinkedIn", "url": "https://www.linkedin.com" },
+      { "name": "Twitter", "url": "https://twitter.com" },
+      { "name": "YouTube", "url": "https://www.youtube.com" },
+      { "name": "Instagram", "url": "https://www.instagram.com" }
+    ]
+  }
+}

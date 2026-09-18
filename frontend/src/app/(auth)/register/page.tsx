@@ -27,7 +27,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="mx-auto max-w-sm">
+    <div className="mx-auto max-w-sm px-4 py-16">
       <h1 className="mb-6 text-2xl">Create your account</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">

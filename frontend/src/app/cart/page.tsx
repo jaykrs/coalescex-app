@@ -45,7 +45,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-2xl px-6 py-12">
       <h1 className="mb-6 text-2xl">Your cart</h1>
       <div className="divide-y divide-line rounded-lg border border-line">
         {items.map((item) => (
@@ -55,7 +55,7 @@ export default function CartPage() {
               <p className="text-sm text-muted">{item.course.category.name}</p>
             </div>
             <div className="flex items-center gap-4">
-              <span className="font-mono">${item.course.discountPrice ?? item.course.price}</span>
+              <span className="font-mono">₹{item.course.discountPrice ?? item.course.price}</span>
               <button
                 onClick={() => removeFromCart(item.course.id)}
                 className="text-sm text-muted hover:text-danger"
@@ -69,7 +69,7 @@ export default function CartPage() {
 
       <div className="mt-6 flex items-center justify-between">
         <span className="text-lg">Total</span>
-        <span className="font-mono text-lg">${total.toFixed(2)}</span>
+        <span className="font-mono text-lg">₹{total.toFixed(2)}</span>
       </div>
 
       {error && <p className="mt-3 text-sm text-danger">{error}</p>}

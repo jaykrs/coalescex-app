@@ -11,7 +11,7 @@ router.use(requireAuth, requireRole(Role.STUDENT));
 // ---- Student dashboard: enrolled courses with computed progress % ----
 router.get("/dashboard", async (req, res) => {
   const enrollments = await prisma.enrollment.findMany({
-    where: { userId: req.user!.sub },
+    where: { userId: req.user!.sub, course: { isDeleted: false } },
     include: {
       course: {
         include: {

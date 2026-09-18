@@ -1,4 +1,4 @@
-import { PrismaClient, Role, CourseStatus, LessonContentType, QuestionType } from "@prisma/client";
+import { PrismaClient, Role, CourseStatus, CourseType, LessonContentType, QuestionType } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
@@ -50,6 +50,7 @@ async function main() {
       categoryId: category.id,
       instructorId: instructor.id,
       status: CourseStatus.PUBLISHED,
+      type: CourseType.BOOTCAMP,
       sections: {
         create: [
           {

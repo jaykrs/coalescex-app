@@ -15,6 +15,12 @@ export default function CoursesPage() {
     queryFn: async () => (await api.get<{ categories: Category[] }>("/categories")).data,
   });
 
+  const categories: Category[] = Array.isArray(categoriesData?.categories)
+    ? categoriesData.categories
+    : Array.isArray(categoriesData)
+    ? (categoriesData as any)
+    : [];
+
   const { data: coursesData, isLoading } = useQuery({
     queryKey: ["courses", categorySlug, search],
     queryFn: async () =>
@@ -26,7 +32,7 @@ export default function CoursesPage() {
   });
 
   return (
-    <div>
+    <div className="mx-auto  px-6 py-10">
       <div className="mb-10 max-w-2xl">
         <h1 className="text-4xl leading-tight">Learn something that sticks.</h1>
         <p className="mt-3 text-muted">
@@ -47,7 +53,7 @@ export default function CoursesPage() {
         >
           All
         </button>
-        {Array.isArray(categoriesData) && categoriesData.categories.map((c) => (
+        {categories.map((c: any) => (
           <button
             key={c.id}
             onClick={() => setCategorySlug(c.slug)}
@@ -60,40 +66,47 @@ export default function CoursesPage() {
 
       {isLoading && <p className="text-muted">Loading courses…</p>}
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {coursesData?.courses.map((course) => (
-          <Link
-            key={course.id}
-            href={`/courses/${course.slug}`}
-            className="group rounded-lg border border-line bg-surface p-5 transition hover:border-brand-400"
-          >
-            <span className="text-xs uppercase tracking-wide text-muted">{course.category.name}</span>
-            <h3 className="mt-1 font-display text-lg leading-snug group-hover:text-brand-700">
-              {course.title}
-            </h3>
-            <p className="mt-2 line-clamp-2 text-sm text-muted">{course.subtitle}</p>
-            <div className="mt-4 flex items-center justify-between text-sm">
-              <span className="text-muted">
-                {course.instructor.firstName} {course.instructor.lastName}
-              </span>
-              <span className="font-mono">
-                {course.discountPrice ? (
-                  <>
-                    <span className="text-muted line-through">${course.price}</span>{" "}
-                    <span className="text-accent">${course.discountPrice}</span>
-                  </>
-                ) : (
-                  `$${course.price}`
-                )}
-              </span>
+      {(() => {
+        const visibleCourses = coursesData?.courses.filter((course) => !course.isDeleted) ?? [];
+        return (
+          <>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {visibleCourses.map((course) => (
+                <Link
+                  key={course.id}
+                  href={`/courses/${course.slug}`}
+                  className="group rounded-lg border border-line bg-surface p-5 transition hover:border-brand-400"
+                >
+                  <span className="text-xs uppercase tracking-wide text-muted">{course.category.name}</span>
+                  <h3 className="mt-1 font-display text-lg leading-snug group-hover:text-brand-700">
+                    {course.title}
+                  </h3>
+                  <p className="mt-2 line-clamp-2 text-sm text-muted">{course.subtitle}</p>
+                  <div className="mt-4 flex items-center justify-between text-sm">
+                    <span className="text-muted">
+                      {course.instructor.firstName} {course.instructor.lastName}
+                    </span>
+                    <span className="font-mono">
+                      {course.discountPrice ? (
+                        <>
+                          <span className="text-muted line-through">₹{course.price}</span>{" "}
+                          <span className="text-accent">₹{course.discountPrice}</span>
+                        </>
+                      ) : (
+                        `₹${course.price}`
+                      )}
+                    </span>
+                  </div>
+                </Link>
+              ))}
             </div>
-          </Link>
-        ))}
-      </div>
 
-      {coursesData && coursesData.courses.length === 0 && (
-        <p className="mt-10 text-center text-muted">No courses match yet. Try a different search or category.</p>
-      )}
+            {coursesData && visibleCourses.length === 0 && (
+              <p className="mt-10 text-center text-muted">No courses match yet. Try a different search or category.</p>
+            )}
+          </>
+        );
+      })()}
     </div>
   );
 }

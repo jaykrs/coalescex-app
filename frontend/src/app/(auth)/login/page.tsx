@@ -28,7 +28,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="mx-auto max-w-sm">
+    <div className="mx-auto max-w-sm px-4 py-16">
       <h1 className="mb-6 text-2xl">Sign in</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

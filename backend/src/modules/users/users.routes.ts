@@ -72,8 +72,8 @@ router.get("/stats/summary", async (_req, res) => {
     await Promise.all([
       prisma.user.count({ where: { role: Role.STUDENT } }),
       prisma.user.count({ where: { role: Role.INSTRUCTOR } }),
-      prisma.course.count(),
-      prisma.course.count({ where: { status: "PUBLISHED" } }),
+      prisma.course.count({ where: { isDeleted: false } }),
+      prisma.course.count({ where: { status: "PUBLISHED", isDeleted: false } }),
       prisma.order.count({ where: { status: "SUCCESS" } }),
       prisma.order.aggregate({ where: { status: "SUCCESS" }, _sum: { amount: true } }),
     ]);
