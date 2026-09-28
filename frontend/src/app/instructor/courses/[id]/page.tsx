@@ -261,11 +261,28 @@ export default function ManageCoursePage() {
                     <>
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-medium">
-                          {lesson.contentType === "ASSESSMENT" ? "📝" : "▶"} {lesson.title}
+                          {lesson.contentType === "ASSESSMENT"
+                            ? "📝"
+                            : lesson.contentType === "PRACTICE"
+                            ? "💻"
+                            : lesson.contentType === "ARTICLE"
+                            ? "📖"
+                            : lesson.contentType === "PDF"
+                            ? "📑"
+                            : "▶"}{" "}
+                          {lesson.title}
                           {lesson.isPreview && <span className="ml-2 text-xs text-brand-600 font-normal">Preview</span>}
                         </span>
                         <div className="flex items-center gap-3">
-                          <span className="text-xs text-muted">{lesson.contentType}</span>
+                          <span
+                            className={`text-xs px-2 py-0.5 rounded font-medium ${
+                              lesson.contentType === "PRACTICE"
+                                ? "bg-purple-100 text-purple-700 border border-purple-200 font-bold"
+                                : "text-muted"
+                            }`}
+                          >
+                            {lesson.contentType}
+                          </span>
                           <button
                             onClick={() => setEditingLessonId(lesson.id)}
                             className="text-xs text-brand-600 hover:underline"

@@ -37,6 +37,7 @@ export function CourseCurriculum({ sections, courseTitle, isEnrolled }: CourseCu
     let article = 0;
     let pdf = 0;
     let assessment = 0;
+    let practice = 0;
     let totalSec = 0;
 
     sections.forEach((s) => {
@@ -45,12 +46,13 @@ export function CourseCurriculum({ sections, courseTitle, isEnrolled }: CourseCu
         else if (l.contentType === "ARTICLE") article++;
         else if (l.contentType === "PDF") pdf++;
         else if (l.contentType === "ASSESSMENT") assessment++;
+        else if (l.contentType === "PRACTICE") practice++;
 
         if (l.durationSec) totalSec += l.durationSec;
       });
     });
 
-    return { video, article, pdf, assessment, totalSec };
+    return { video, article, pdf, assessment, practice, totalSec };
   }, [sections]);
 
   const formattedTotalTime = useMemo(() => {
@@ -218,6 +220,20 @@ export function CourseCurriculum({ sections, courseTitle, isEnrolled }: CourseCu
             }`}
           >
             <span>🎯</span> Assessments ({countsByType.assessment})
+          </button>
+        )}
+
+        {countsByType.practice > 0 && (
+          <button
+            type="button"
+            onClick={() => setSelectedFilter("PRACTICE")}
+            className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-semibold transition cursor-pointer ${
+              selectedFilter === "PRACTICE"
+                ? "bg-purple-700 text-white shadow-xs"
+                : "border border-line bg-surface text-ink hover:bg-paper"
+            }`}
+          >
+            <span>💻</span> Practice ({countsByType.practice})
           </button>
         )}
       </div>
@@ -403,6 +419,19 @@ export function CourseCurriculum({ sections, courseTitle, isEnrolled }: CourseCu
                 </div>
               )}
 
+              {/* Practice Preview */}
+              {previewLesson.contentType === "PRACTICE" && (
+                <div className="rounded-xl border border-purple-800/60 bg-purple-950/30 p-6 text-center space-y-3">
+                  <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/20 text-purple-400 text-xl font-bold">
+                    💻
+                  </div>
+                  <h4 className="text-sm font-semibold text-slate-200">Interactive In-Browser Code Compiler</h4>
+                  <p className="text-xs text-slate-400 max-w-sm mx-auto">
+                    Live hands-on coding sandbox (JavaScript, Python, Java) with real-time compilation, terminal logs, and syntax formatting.
+                  </p>
+                </div>
+              )}
+
               {/* CTA Banner inside Modal */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-brand-500/30 bg-brand-500/10 p-4">
                 <div>
@@ -521,6 +550,18 @@ function LessonItemCard({ lesson, index, isEnrolled, onPreviewClick }: LessonIte
           </div>
         )}
 
+        {/* --- PRACTICE THUMBNAIL --- */}
+        {lesson.contentType === "PRACTICE" && (
+          <div className="relative h-16 w-24 sm:h-18 sm:w-28 flex-shrink-0 overflow-hidden rounded-lg bg-gradient-to-br from-purple-950 via-indigo-950 to-slate-950 border border-purple-700/80 shadow-xs flex flex-col items-center justify-center group-hover:border-purple-400 transition">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-600/50 text-purple-300 font-mono text-xs font-black shadow-xs border border-purple-500/50">
+              &lt;/&gt;
+            </div>
+            <span className="mt-1.5 inline-flex items-center gap-1 rounded bg-black/60 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-purple-300">
+              <span>💻</span> Practice
+            </span>
+          </div>
+        )}
+
         {/* ============================================================ */}
         {/* 2. LESSON TITLE & METADATA                                  */}
         {/* ============================================================ */}
@@ -554,6 +595,11 @@ function LessonItemCard({ lesson, index, isEnrolled, onPreviewClick }: LessonIte
             {lesson.contentType === "ASSESSMENT" && (
               <span className="inline-flex items-center gap-1 text-muted font-medium">
                 <span className="text-amber-600">🎯</span> Graded Quiz &amp; Knowledge Check
+              </span>
+            )}
+            {lesson.contentType === "PRACTICE" && (
+              <span className="inline-flex items-center gap-1 text-muted font-medium">
+                <span className="text-purple-600">💻</span> Hands-on Code Practice &amp; Compiler
               </span>
             )}
           </div>

@@ -69,7 +69,7 @@ export interface Course {
   _count?: { enrollments: number };
 }
 
-export type LessonContentType = "VIDEO" | "ARTICLE" | "PDF" | "ASSESSMENT";
+export type LessonContentType = "VIDEO" | "ARTICLE" | "PDF" | "ASSESSMENT" | "PRACTICE";
 
 export interface Lesson {
   id: string;

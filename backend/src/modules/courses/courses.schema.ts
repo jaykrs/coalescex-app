@@ -38,11 +38,11 @@ export const updateSectionSchema = createSectionSchema.partial();
 
 export const createLessonSchema = z.object({
   title: z.string().min(1),
-  order: z.number().int().nonnegative(),
-  contentType: z.enum(["VIDEO", "ARTICLE", "PDF", "ASSESSMENT"]),
-  contentUrl: z.string().optional(),
-  durationSec: z.number().int().nonnegative().optional(),
-  isPreview: z.boolean().optional(),
+  order: z.number().int().nonnegative().optional().default(0),
+  contentType: z.enum(["VIDEO", "ARTICLE", "PDF", "ASSESSMENT", "PRACTICE"]),
+  contentUrl: z.string().optional().nullable(),
+  durationSec: z.number().int().nonnegative().optional().nullable(),
+  isPreview: z.boolean().optional().default(false),
 });
 
 export const updateLessonSchema = createLessonSchema.partial();

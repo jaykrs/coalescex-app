@@ -299,7 +299,7 @@ router.post(
     }
     const input = createLessonSchema.parse(req.body);
     const lesson = await prisma.lesson.create({
-      data: { ...input, sectionId: req.params.sectionId },
+      data: { ...input, sectionId: req.params.sectionId } as any,
     });
     if (req.user!.role === Role.INSTRUCTOR) {
       await prisma.course.update({
@@ -327,14 +327,14 @@ router.patch(
     const input = updateLessonSchema.parse(req.body);
     const hasChanged =
       (input.title !== undefined && input.title.trim() !== lesson.title.trim()) ||
-      (input.contentType !== undefined && input.contentType !== lesson.contentType) ||
+      (input.contentType !== undefined && (input.contentType as any) !== lesson.contentType) ||
       (input.contentUrl !== undefined && (input.contentUrl ?? "").trim() !== (lesson.contentUrl ?? "").trim()) ||
       (input.isPreview !== undefined && input.isPreview !== lesson.isPreview) ||
       (input.durationSec !== undefined && input.durationSec !== lesson.durationSec);
 
     const updated = await prisma.lesson.update({
       where: { id: req.params.lessonId },
-      data: input,
+      data: input as any,
     });
     if (req.user!.role === Role.INSTRUCTOR && hasChanged) {
       await prisma.course.update({
