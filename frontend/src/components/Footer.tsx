@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import footerData from "@/data/footer-data.json";
+import { useCookieConsent } from "@/lib/cookie-consent-context";
 
 export function Footer() {
+  const { openPreferences } = useCookieConsent();
   return (
     <footer className="bg-[#F5F7FA] text-gray-700 border-t border-gray-200">
       <div className="mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 lg:py-16">
@@ -40,12 +42,25 @@ export function Footer() {
               <ul className="space-y-2">
                 {section.links.map((link, lIdx) => (
                   <li key={lIdx}>
-                    <Link
-                      href={link.href}
-                      className="text-[13px] text-gray-700 hover:text-blue-700 hover:underline transition-colors block leading-snug"
-                    >
-                      {link.label}
-                    </Link>
+                    {link.href === "#cookies" ? (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          openPreferences();
+                        }}
+                        className="text-[13px] text-gray-700 hover:text-blue-700 hover:underline transition-colors block leading-snug text-left"
+                      >
+                        {link.label}
+                      </button>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className="text-[13px] text-gray-700 hover:text-blue-700 hover:underline transition-colors block leading-snug"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

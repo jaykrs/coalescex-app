@@ -36,6 +36,7 @@ enum LessonContentType {
   ARTICLE
   PDF
   ASSESSMENT
+  PRACTICE
 }
 
 enum OrderStatus {

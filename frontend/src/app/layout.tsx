@@ -5,6 +5,14 @@ import { CartProvider } from "@/lib/cart-context";
 import { QueryProvider } from "@/lib/query-provider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { CookieConsentProvider } from "@/lib/cookie-consent-context";
+import {
+  CookieConsentBanner,
+  CookiePreferencesModal,
+  FloatingCookieButton,
+  ConsentModeInit,
+  MarketingScriptsLoader,
+} from "@/components/cookies";
 
 const schemaGraph = {
   "@context": "https://schema.org",
@@ -107,6 +115,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
+        <ConsentModeInit />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaGraph) }}
@@ -116,9 +125,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <QueryProvider>
           <AuthProvider>
             <CartProvider>
-              <Header />
-              <main className="min-h-screen">{children}</main>
-              <Footer />
+              <CookieConsentProvider>
+                <Header />
+                <main className="min-h-screen">{children}</main>
+                <Footer />
+                <CookieConsentBanner />
+                <CookiePreferencesModal />
+                <FloatingCookieButton />
+                <MarketingScriptsLoader />
+              </CookieConsentProvider>
             </CartProvider>
           </AuthProvider>
         </QueryProvider>
