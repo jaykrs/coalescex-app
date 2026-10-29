@@ -15,6 +15,7 @@ import orderRoutes from "@/modules/orders/orders.routes";
 import progressRoutes from "@/modules/progress/progress.routes";
 import assessmentRoutes from "@/modules/assessments/assessments.routes";
 import userRoutes from "@/modules/users/users.routes";
+import legalPageRoutes from "@/modules/legal-pages/legal-pages.routes";
 
 export function createApp() {
   const app = express();
@@ -37,6 +38,7 @@ export function createApp() {
   app.use("/api/assessments", assessmentRoutes);
   app.use("/api/admin/users", userRoutes);
 
+  app.use("/api/legal-pages", legalPageRoutes);
   app.use(notFoundHandler);
   app.use(errorHandler);
 

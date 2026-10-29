@@ -347,3 +347,15 @@ model AssessmentSubmission {
   @@index([userId])
   @@map("assessment_submissions")
 }
+
+model LegalPage {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  lastUpdated String
+  content     Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("LegalPage")
+}

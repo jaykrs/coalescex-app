@@ -99,6 +99,8 @@
         { "label": "Investors", "href": "/investors" },
         { "label": "Terms", "href": "/terms" },
         { "label": "Privacy", "href": "/privacy" },
+        { "label": "GDPR", "href": "/gdpr" },
+        { "label": "Payment Protection Policy", "href": "/payment-protection-policy" },
         { "label": "Help", "href": "/help" },
         { "label": "Accessibility", "href": "/accessibility" },
         { "label": "Contact", "href": "/contact" },
