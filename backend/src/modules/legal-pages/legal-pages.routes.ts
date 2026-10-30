@@ -25,6 +25,15 @@ const allowedSlugs = [
   "privacy",
   "gdpr",
   "payment-protection-policy",
+  "press",
+  "investors",
+  "help",
+  "accessibility",
+  "contact",
+  "articles",
+  "directory",
+  "affiliates",
+  "modern-slavery",
 ] as const;
 
 function validateSlug(slug: string) {

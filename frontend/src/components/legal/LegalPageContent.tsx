@@ -19,7 +19,20 @@ type LegalPageData = {
 };
 
 type Props = {
-  slug: "terms" | "privacy" | "gdpr" | "payment-protection-policy";
+  slug:
+    | "terms"
+    | "privacy"
+    | "gdpr"
+    | "payment-protection-policy"
+    | "press"
+    | "investors"
+    | "help"
+    | "accessibility"
+    | "contact"
+    | "articles"
+    | "directory"
+    | "affiliates"
+    | "modern-slavery";
   intro?: string;
   variant?: "gdpr" | "payment";
 };
