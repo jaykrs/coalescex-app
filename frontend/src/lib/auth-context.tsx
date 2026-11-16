@@ -15,6 +15,8 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
+let silentRefreshPromise: Promise<any> | null = null;
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -24,7 +26,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Attempt silent refresh on load so a page reload keeps the session alive.
     (async () => {
       try {
-        const refreshRes = await api.post("/auth/refresh");
+        if (!silentRefreshPromise) {
+          silentRefreshPromise = api.post("/auth/refresh").finally(() => {
+            silentRefreshPromise = null;
+          });
+        }
+        const refreshRes = await silentRefreshPromise;
         setAccessToken(refreshRes.data.accessToken);
         setUser(refreshRes.data.user);
       } catch {

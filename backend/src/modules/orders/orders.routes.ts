@@ -46,8 +46,8 @@ router.post("/checkout", requireAuth, requireRole(Role.STUDENT), async (req, res
     firstname: user.firstName,
     email: user.email,
     phone: "9999999999", // collect a real phone number at checkout in production
-    surl: `${env.payu.successUrl}?orderId=${order.id}`,
-    furl: `${env.payu.failureUrl}?orderId=${order.id}`,
+    surl: env.payu.callbackUrl,
+    furl: env.payu.callbackUrl,
   });
 
   res.json({ orderId: order.id, payuParams });
@@ -70,7 +70,7 @@ router.post("/payu/callback", async (req, res) => {
       where: { id: order.id },
       data: { status: OrderStatus.FAILED, payuRawPayload: payload as unknown as object },
     });
-    throw ApiError.badRequest("Hash verification failed — possible tampering");
+    return res.redirect(`${env.payu.failureUrl}?orderId=${order.id}&reason=hash_mismatch`);
   }
 
   const success = payload.status === "success";

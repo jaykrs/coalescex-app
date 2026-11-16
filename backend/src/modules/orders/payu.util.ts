@@ -68,10 +68,18 @@ export interface PayuResponsePayload {
 }
 
 export function verifyPayuResponseHash(payload: PayuResponsePayload): boolean {
-  const hashSequence = [
-    env.payu.salt,
+  const baseSequence = [
     payload.status,
-    "", "", "", "", "", "", "", "", "", "", // udf5..udf1 + reserved
+    payload.udf10 ?? "",
+    payload.udf9 ?? "",
+    payload.udf8 ?? "",
+    payload.udf7 ?? "",
+    payload.udf6 ?? "",
+    payload.udf5 ?? "",
+    payload.udf4 ?? "",
+    payload.udf3 ?? "",
+    payload.udf2 ?? "",
+    payload.udf1 ?? "",
     payload.email,
     payload.firstname,
     payload.productinfo,
@@ -80,8 +88,19 @@ export function verifyPayuResponseHash(payload: PayuResponsePayload): boolean {
     payload.key,
   ].join("|");
 
-  const expectedHash = sha512(hashSequence);
-  return expectedHash === payload.hash;
+  const hashWithoutAdditionalCharges = sha512(`${env.payu.salt}|${baseSequence}`);
+
+  if (payload.additionalCharges) {
+    const hashWithAdditionalCharges = sha512(
+      `${payload.additionalCharges}|${env.payu.salt}|${baseSequence}`
+    );
+    return (
+      hashWithAdditionalCharges.toLowerCase() === payload.hash.toLowerCase() ||
+      hashWithoutAdditionalCharges.toLowerCase() === payload.hash.toLowerCase()
+    );
+  }
+
+  return hashWithoutAdditionalCharges.toLowerCase() === payload.hash.toLowerCase();
 }
 
 export function generateTxnId(): string {

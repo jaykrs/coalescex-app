@@ -29,6 +29,9 @@ export function Header() {
           <Link href="/courses" className="text-ink hover:text-brand-600 transition font-medium">
             Courses
           </Link>
+          <Link href="/blog" className="text-ink hover:text-brand-600 transition font-medium">
+            Blog
+          </Link>
 
           {user?.role === "STUDENT" && (
             <>
@@ -133,6 +136,14 @@ export function Header() {
               className="rounded-md px-3 py-2.5 text-ink hover:bg-paper hover:text-brand-600 transition"
             >
               📚 Browse Courses
+            </Link>
+
+            <Link
+              href="/blog"
+              onClick={closeMenu}
+              className="rounded-md px-3 py-2.5 text-ink hover:bg-paper hover:text-brand-600 transition"
+            >
+              ✍️ Blog &amp; Insights
             </Link>
 
             {user?.role === "STUDENT" && (

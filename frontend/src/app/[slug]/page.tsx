@@ -1,9 +1,16 @@
-
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import LegalPageContent from "@/components/legal/LegalPageContent";
+import { PolicyPageView } from "@/components/legal/PolicyPageView";
+import { getLegalPage } from "@/data/legal";
 
 const legalSlugs = [
+  "privacy",
+  "privacy-policy",
+  "payment-protection-policy",
+  "payment-policy",
+  "refund-policy",
+  "refund",
   "terms",
   "press",
   "investors",
@@ -25,11 +32,14 @@ type PageProps = {
 };
 
 function isLegalSlug(slug: string): slug is LegalSlug {
-  return legalSlugs.includes(slug as LegalSlug);
+  return legalSlugs.includes(slug as LegalSlug) || !!getLegalPage(slug);
 }
 
-function getPageTitle(slug: string) {
-  const titles: Record<LegalSlug, string> = {
+function getPageTitle(slug: string): string {
+  const localPage = getLegalPage(slug);
+  if (localPage) return localPage.title;
+
+  const titles: Record<string, string> = {
     terms: "Terms and Conditions",
     press: "Press",
     investors: "Investors",
@@ -42,7 +52,7 @@ function getPageTitle(slug: string) {
     "modern-slavery": "Modern Slavery Statement",
   };
 
-  return titles[slug as LegalSlug];
+  return titles[slug] || "Legal Policy";
 }
 
 export async function generateMetadata({
@@ -67,5 +77,11 @@ export default function DynamicLegalPage({ params }: PageProps) {
     notFound();
   }
 
-  return <LegalPageContent slug={params.slug} />;
+  // If this slug belongs to our unified local policies, render PolicyPageView
+  const localPolicy = getLegalPage(params.slug);
+  if (localPolicy) {
+    return <PolicyPageView slug={params.slug} />;
+  }
+
+  return <LegalPageContent slug={params.slug as any} />;
 }

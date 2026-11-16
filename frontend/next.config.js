@@ -4,6 +4,13 @@ const nextConfig = {
   images: {
     remotePatterns: [{ protocol: "https", hostname: "**" }],
   },
+  experimental: {
+    serverComponentsExternalPackages: [
+      "react-google-recaptcha",
+      "react-async-script",
+      "prop-types",
+    ],
+  },
 };
 
 module.exports = nextConfig;

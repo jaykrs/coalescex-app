@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
 import { api } from "@/lib/api-client";
 
 export default function AdminPage() {
@@ -9,6 +10,16 @@ export default function AdminPage() {
   const { data: stats } = useQuery({
     queryKey: ["admin-stats"],
     queryFn: async () => (await api.get("/admin/users/stats/summary")).data,
+  });
+
+  const { data: subStats } = useQuery({
+    queryKey: ["admin-sub-stats"],
+    queryFn: async () => (await api.get("/subscriptions/stats")).data.stats,
+  });
+
+  const { data: blogStats } = useQuery({
+    queryKey: ["admin-blog-stats"],
+    queryFn: async () => (await api.get("/blogs/stats")).data.stats,
   });
 
   const { data: pending } = useQuery({
@@ -30,7 +41,7 @@ export default function AdminPage() {
     <div>
       <h1 className="mb-6 text-2xl">Admin Panel</h1>
 
-      <div className="mb-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div className="mb-10 grid grid-cols-2 gap-4 sm:grid-cols-6">
         {stats &&
           [
             ["Students", stats.totalStudents],
@@ -43,6 +54,30 @@ export default function AdminPage() {
               <p className="mt-1 font-mono text-2xl">{value}</p>
             </div>
           ))}
+        <Link
+          href="/admin/blogs"
+          className="rounded-lg border border-line bg-surface p-4 hover:bg-paper transition group"
+        >
+          <p className="text-xs uppercase tracking-wide text-muted group-hover:text-brand-600 flex items-center justify-between">
+            <span>Blogs</span>
+            <span>→</span>
+          </p>
+          <p className="mt-1 font-mono text-2xl text-ink">
+            {blogStats ? blogStats.total : "—"}
+          </p>
+        </Link>
+        <Link
+          href="/admin/subscriptions"
+          className="rounded-lg border border-line bg-surface p-4 hover:bg-paper transition group"
+        >
+          <p className="text-xs uppercase tracking-wide text-muted group-hover:text-brand-600 flex items-center justify-between">
+            <span>Subscribers</span>
+            <span>→</span>
+          </p>
+          <p className="mt-1 font-mono text-2xl text-ink">
+            {subStats ? subStats.totalSubscribers : "—"}
+          </p>
+        </Link>
       </div>
 
       <h2 className="mb-3 text-xl">Pending course approvals</h2>

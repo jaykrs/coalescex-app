@@ -16,6 +16,8 @@ import progressRoutes from "@/modules/progress/progress.routes";
 import assessmentRoutes from "@/modules/assessments/assessments.routes";
 import userRoutes from "@/modules/users/users.routes";
 import legalPageRoutes from "@/modules/legal-pages/legal-pages.routes";
+import subscriptionRoutes from "@/modules/subscriptions/subscriptions.routes";
+import blogRoutes from "@/modules/blogs/blogs.routes";
 
 export function createApp() {
   const app = express();
@@ -37,8 +39,9 @@ export function createApp() {
   app.use("/api/progress", progressRoutes);
   app.use("/api/assessments", assessmentRoutes);
   app.use("/api/admin/users", userRoutes);
-
   app.use("/api/legal-pages", legalPageRoutes);
+  app.use("/api/subscriptions", subscriptionRoutes);
+  app.use("/api/blogs", blogRoutes);
   app.use(notFoundHandler);
   app.use(errorHandler);
 

@@ -359,3 +359,67 @@ model LegalPage {
 
   @@map("LegalPage")
 }
+
+// ---------------------------------------------------------------------------
+// Subscriptions
+// ---------------------------------------------------------------------------
+
+enum SubscriptionStatus {
+  PENDING
+  SUBSCRIBED
+  UNSUBSCRIBED
+}
+
+model Subscription {
+  id           String             @id @default(uuid())
+  email        String             @unique
+  status       SubscriptionStatus @default(PENDING)
+  subscribedAt DateTime?
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  @@index([status])
+  @@map("subscriptions")
+}
+
+// ---------------------------------------------------------------------------
+// Blogs
+// ---------------------------------------------------------------------------
+
+enum BlogStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model Blog {
+  id               String      @id @default(uuid())
+  title            String
+  slug             String      @unique
+  featuredImage    String?
+  shortDescription String?     @db.Text
+  category         String
+  author           String      @default("Coalescex Team")
+  publishDate      DateTime    @default(now())
+  status           BlogStatus  @default(DRAFT)
+  htmlContent      String      @db.Text
+
+  // SEO fields
+  metaTitle        String?
+  metaDescription  String?     @db.Text
+  metaKeywords     String?
+  canonicalUrl     String?
+  ogTitle          String?
+  ogDescription    String?     @db.Text
+  ogImage          String?
+  robots           String?     @default("index, follow")
+
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@index([status])
+  @@index([category])
+  @@index([publishDate])
+  @@map("blogs")
+}
+
+

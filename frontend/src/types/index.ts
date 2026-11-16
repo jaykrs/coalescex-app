@@ -126,3 +126,37 @@ export interface DashboardEntry {
   completedLessons: number;
   progressPercent: number;
 }
+
+export type BlogStatus = "DRAFT" | "PUBLISHED";
+
+export interface Blog {
+  id: string;
+  title: string;
+  slug: string;
+  featuredImage?: string | null;
+  shortDescription?: string | null;
+  category: string;
+  author: string;
+  publishDate: string;
+  status: BlogStatus;
+  htmlContent: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaKeywords?: string | null;
+  canonicalUrl?: string | null;
+  ogTitle?: string | null;
+  ogDescription?: string | null;
+  ogImage?: string | null;
+  robots?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BlogListResponse {
+  blogs: Blog[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+

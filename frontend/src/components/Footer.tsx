@@ -3,12 +3,33 @@
 import Link from "next/link";
 import footerData from "@/data/footer-data.json";
 import { useCookieConsent } from "@/lib/cookie-consent-context";
+import { SubscriptionForm } from "@/components/SubscriptionForm";
 
 export function Footer() {
   const { openPreferences } = useCookieConsent();
   return (
     <footer className="bg-[#F5F7FA] text-gray-700 border-t border-gray-200">
       <div className="mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 lg:py-16">
+        {/* ROW 0: NEWSLETTER SUBSCRIPTION */}
+        <div className="pb-10 sm:pb-12 mb-10 sm:mb-12 border-b border-gray-200">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 lg:gap-12">
+            <div className="max-w-xl">
+              <span className="text-xs font-bold uppercase tracking-wider text-brand-600">
+                Newsletter
+              </span>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight mt-1">
+                Stay updated with emerging skills & new courses
+              </h2>
+              <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+                Join our community of lifelong learners. Receive curated industry insights, free masterclass invites, and new course announcements straight to your inbox.
+              </p>
+            </div>
+            <div className="w-full lg:max-w-md bg-white rounded-xl border border-gray-200 p-5 sm:p-6 shadow-xs">
+              <SubscriptionForm />
+            </div>
+          </div>
+        </div>
+
         {/* ROW 1: TOP 4 COLUMNS (Skills, Certificates, Courses, Career Resources) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 lg:gap-10 pb-10 sm:pb-12 border-b border-gray-200">
           {footerData.topSections.map((section, idx) => (

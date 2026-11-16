@@ -56,8 +56,11 @@ export async function refreshSession(refreshToken: string) {
   const user = await prisma.user.findUnique({ where: { id: payload.sub } });
   if (!user || !user.isActive) throw ApiError.unauthorized();
 
-  // Rotate refresh token
-  await prisma.refreshToken.delete({ where: { id: stored.id } });
+  // Rotate refresh token safely (prevent race condition crash on concurrent requests)
+  const result = await prisma.refreshToken.deleteMany({ where: { id: stored.id } });
+  if (result.count === 0) {
+    throw ApiError.unauthorized("Session expired or already refreshed");
+  }
   return issueSession(user.id, user.email, user.role);
 }
 
